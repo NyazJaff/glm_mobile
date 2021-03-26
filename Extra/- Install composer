@@ -1,0 +1,78 @@
+- Install composer
+
+$ curl -sS https://getcomposer.org/installer | php
+$ chmod +x composer.phar
+$ mv composer.phar /usr/local/bin/composer
+$ composer
+
+
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+
+
+
+- rbenv
+https://devhints.io/rbenv
+- rbenv on ec2
+https://linuxize.com/post/how-to-install-ruby-on-ubuntu-20-04/
+
+- Create new project 
+https://gorails.com/setup/osx/11.0-big-sur
+
+- Install nginx
+https://www.phusionpassenger.com/library/install/nginx/install/oss/bionic/
+
+Configurehttps://www.codewithjason.com/install-nginx-passenger-ec2-instance-rails-hosting/ EC2 for Rails
+
+
+
+# Prouction Deploy
+
+on server create directory for the project
+`sudo mkdir deploy/project_name`
+
+sudo chown -R ubuntu /home/deploy/glm_backend
+sudo chown -R 755 /home/deploy/glm_backend/current/public
+
+- Install npm
+sudo apt install npm
+
+- Install Node.js
+sudo apt install nodejs
+
+- Install Yarn
+sudo npm install -g yarn
+
+- Install mysql
+sudo apt-get install libmysqlclient-dev
+
+- Install Mysql
+sudo apt install mysql-server
+sudo systemctl status mysql     # check if running
+https://linuxize.com/post/how-to-install-mysql-on-ubuntu-18-04/ #  More info
+https://linuxconfig.org/how-to-reset-root-mysql-mariadb-password-on-ubuntu-20-04-focal-fossa-linux 
+/etc/mysql/mysql.conf.d/mysqld.cnf  # bind address
+
+
+- Rails key
+Copying master.key and credentials.yml.enc to my app
+Commiting to repo
+Added this line to config/deploy.rb:
+set :linked_files, %w{config/master.key}
+copy manualy the key to my ec2 on path/to/app/shared/config/master.key
+
+
+
+
+
+- Restart application 
+sudo passenger-config restart-app
+sudo service nginx restart
+sudo tail -n 20 /var/log/nginx/error.log  # See logs
+
+
+
+
+
+
+

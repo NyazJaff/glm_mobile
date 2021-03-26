@@ -1,0 +1,68 @@
+
+Go through each requested slots and validate if 
+Selected slot requested in past < 2
+	Find in RequestedSlots where phone_id=121 and date = 13/12/2020 and slot_prayer = requested slot prayer
+Check slots still available
+
+Total number of slots for given date < = 10
+
+Slot passes validation? 
+add record in RequestedSlots and update matching SlotsAvailablities to -1
+
+
+Delete
+Mark RequestedSlots status as deleted
+SlotsAvailablities for slot add +1
+Tables
+
+
+show
+Select all slots from RequestedSlots where phoen_id = and status = 1 and date >= now
+
+
+RequestedSlots    => slots requested by user 
+id
+phone_id
+gender
+date,  (booking date)         
+prayer (isha or marib)
+email
+status (active, cancled)
+ 
+SlotAvailablities => track the slot availablites for each day and each prayer, to be created regulary, 2 records for each day
+id
+date
+fajr
+zuhur
+asr
+magrib
+isha
+gender
+
+
+PrayerConfigs [1, Fajar, "2020"]
+id
+prayer
+gender
+limit
+status
+
+
+
+prayer time to be added to SlotsAvailablities on time of create from prayer timetable table
+
+----
+Emailing 
+IAM User Name: ses-smtp-glm.20210311-232922
+SMTP Username: AKIASPLA2VQMYW3GWSVL
+SMTP Password: BBaB80wWWS8MsLf5kIxCcDuSbE+Azr9f8b4aJzZe24FN
+
+
+ec2
+ubuntu, deploy
+glm_ubuntu
+
+deploy_user
+deploy2021
+
+
