@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glm_mobile/utilities/constants.dart';
 
 class TriangleClipper extends CustomClipper<Path> {
   @override
@@ -30,9 +31,12 @@ class HomeCurvedShape extends CustomPainter {
           0.7,
         ],
         colors: [
-          Color(0xffc3991c),
-          Color(0x80c3991c),
-          Color(0x80c3991c),
+          Color(0xff1C82C3),
+          Color(0x831c82c3),
+          Color(0x371c82c3),
+          // Color(0xffc3991c),
+          // Color(0x80c3991c),
+          // Color(0x80c3991c),
         ]);
     // paint.color = Color(0xffd4d3fd);
     var paint = Paint()..shader = gradient.createShader(rect);

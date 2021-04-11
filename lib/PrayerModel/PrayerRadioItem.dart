@@ -14,15 +14,18 @@ class RadioPrayerItem extends StatelessWidget {
         children: <Widget>[
           // SizedBox(height: 10),
           Flexible(
-            child: Text(
-              _item.label.toUpperCase(),
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color:
-                _item.isSelected ? textAndIconColour : Colors.grey[500],
+            child: Container(
+              padding: EdgeInsets.all(5),
+              child: Text(
+                _item.label.toUpperCase(),
+                overflow: TextOverflow.visible,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color:
+                  _item.isSelected ? textAndIconColour : Colors.grey[500],
+                ),
               ),
             ),
           ),

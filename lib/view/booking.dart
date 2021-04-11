@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:glm_mobile/PrayerModel/SelectablePrayerCard.dart';
 import 'package:glm_mobile/class/CustomShapes.dart';
 import 'package:glm_mobile/class/Input.dart';
@@ -25,10 +26,10 @@ class _BookingState extends State<Booking> {
   TextEditingController full_name = TextEditingController();  final focus_full_name = FocusNode();
   TextEditingController phone_number = TextEditingController(); final focus_phone_number = FocusNode();
   TextEditingController email = TextEditingController(); final focus_email = FocusNode();
-  TextEditingController address_line_1 = TextEditingController(); final focus_address_line_1 = FocusNode();
-  TextEditingController address_line_2 = TextEditingController(); final focus_address_line_2 = FocusNode();
-  TextEditingController city = TextEditingController(); final focus_city = FocusNode();
-  TextEditingController postcode = TextEditingController(); final focus_postcode = FocusNode();
+  // TextEditingController address_line_1 = TextEditingController(); final focus_address_line_1 = FocusNode();
+  // TextEditingController address_line_2 = TextEditingController(); final focus_address_line_2 = FocusNode();
+  // TextEditingController city = TextEditingController(); final focus_city = FocusNode();
+  // TextEditingController postcode = TextEditingController(); final focus_postcode = FocusNode();
 
   StepperType stepperType = StepperType.horizontal;
 
@@ -63,7 +64,7 @@ class _BookingState extends State<Booking> {
   Future<void> initState() {
     super.initState();
 
-    inputsToValidate = [full_name, phone_number, email, address_line_1, city, postcode];
+    inputsToValidate = [full_name, phone_number, email];
     getPrayerSlots();
     getUserInfoFromPreference();
   }
@@ -73,14 +74,13 @@ class _BookingState extends State<Booking> {
     if (data.isEmpty){
       return;
     }
-    print("****");
     full_name.text = data['full_name'];
     phone_number.text = data['phone_number'];
     email.text = data['email'];
-    address_line_1.text = data['address_line_1'];
-    address_line_2.text = data['address_line_2'];
-    city.text = data['city'];
-    postcode.text = data['postcode'];
+    // address_line_1.text = data['address_line_1'];
+    // address_line_2.text = data['address_line_2'];
+    // city.text = data['city'];
+    // postcode.text = data['postcode'];
   }
 
   setUserInfoFromPreference() async{
@@ -88,10 +88,10 @@ class _BookingState extends State<Booking> {
     data['full_name'] = full_name.text;
     data['phone_number'] = phone_number.text;
     data['email'] = email.text;
-    data['address_line_1'] = address_line_1.text;
-    data['address_line_2'] = address_line_2.text;
-    data['city'] = city.text;
-    data['postcode'] = postcode.text;
+    // data['address_line_1'] = address_line_1.text;
+    // data['address_line_2'] = address_line_2.text;
+    // data['city'] = city.text;
+    // data['postcode'] = postcode.text;
     await bookingHelper.setUserInfoInPreference(data);
   }
 
@@ -172,10 +172,10 @@ class _BookingState extends State<Booking> {
     bookingSlotData['full_name']      = full_name.text;
     bookingSlotData['phone_number']   = phone_number.text;
     bookingSlotData['email']          = email.text;
-    bookingSlotData['address_line_1'] = address_line_1.text;
-    bookingSlotData['address_line_2'] = address_line_2.text;
-    bookingSlotData['city']           = city.text;
-    bookingSlotData['postcode']       = postcode.text;
+    // bookingSlotData['address_line_1'] = address_line_1.text;
+    // bookingSlotData['address_line_2'] = address_line_2.text;
+    // bookingSlotData['city']           = city.text;
+    // bookingSlotData['postcode']       = postcode.text;
     var response = await bookingHelper.bookSlotOnSystem(bookingSlotData);
     if(response['status'] == 'error'){
       setWarning(response['message']);
@@ -202,9 +202,23 @@ class _BookingState extends State<Booking> {
             // decoration: BoxDecoration(color: Color(0x50A04C0)),
             child: Stack(
               children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    "assets/brand/masjid-outside.jpg",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     image: DecorationImage(
+                //       image: AssetImage("assets/brand/grid.jpeg"),
+                //       fit: BoxFit.cover,
+                //     ),
+                //   ),
+                // ),
                 createTopCurved(),
-                addCurvedImage('home-backround-shape'),
-                addCurvedImage('home-backround'),
+                // addCurvedImage('home-backround-shape'),
+                // addCurvedImage('home-backround'),
                 flashContainer([
                   SizedBox(height: 40.0),
                   createLogoDisplay(),
@@ -212,12 +226,20 @@ class _BookingState extends State<Booking> {
                   complete == false
                       ? createBookingBox()
                       : createSummary(),
-                  SizedBox(height: 40),
+                  SizedBox(height: 10),
                   TextButton(
                     child: Text('My Bookings',
                         style: txtStyle(paramBold: true, paramSize: 16)),
                     onPressed: () {
                       _showModalBottomSheet(context);
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Prayer Timetable',
+                        style: txtStyle(paramBold: true, paramSize: 16)),
+                    onPressed: () async {
+                      await InAppBrowser.openWithSystemBrowser(
+                          url: 'https://honeyforsyria.com/wp-content/uploads/2021/04/current_prayer_timetable.pdf');
                     },
                   )
                   // TextButton(onPressed: _showModalBottomSheet(context), child: Container())
@@ -230,27 +252,40 @@ class _BookingState extends State<Booking> {
     );
   }
 
+  weInRamadan(){
+    var startDate = new DateTime(2021, 4, 7);
+    var endDate = new DateTime(startDate.year, startDate.month + 1, startDate.day+5);
+    DateTime now = new DateTime.now();
+    if(now.isAfter(startDate) && now.isBefore(endDate) ){
+      return true;
+    }
+    return false;
+  }
+
   _showModalBottomSheet(context){
     showModalBottomSheet(context: context, builder: (BuildContext cotext) {
-      return Column(children: [
-        Row(
-          children: [
-            Spacer(),
-            IconButton(icon: Icon(Icons.cancel, color: Colors.grey, size: 25,),
-                onPressed: (){
-              Navigator.of(context).pop();
-                })
-          ],
+      return SingleChildScrollView(
+        child: Column(children: [
+          Row(
+            children: [
+              Spacer(),
+              IconButton(icon: Icon(Icons.cancel, color: Colors.grey, size: 25,),
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  })
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.only(top:10),
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: CurrentBookings(),
+          )
+        ]
         ),
-        Container(
-          padding: EdgeInsets.only(top:10),
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: CurrentBookings(),
-        )
-      ]
       );
     });
   }
+
   callCreateOptionMethod(key, data) {
     switch (key) {
       case "gender":
@@ -348,7 +383,7 @@ class _BookingState extends State<Booking> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-                width: 30,
+                width: 35,
                 child: currentDateIndex > 0
                     ? TextButton(
                   onPressed: () {
@@ -361,9 +396,12 @@ class _BookingState extends State<Booking> {
                       color: navButtons),
                 )
                     : Container()),
-            Container(
-              width: 200,
-              child: Text(formatDate(bookingSlotData['date']),
+            Flexible(
+              child: Text(
+                  formatDate(bookingSlotData['date']),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   style: TextStyle(
                       color: textAndIconColour,
                       fontSize: 15,
@@ -371,7 +409,7 @@ class _BookingState extends State<Booking> {
                       fontWeight: FontWeight.bold)),
             ),
             Container(
-              width: 40,
+              width: 35,
               child: currentDateIndex + 1 != dates.values.toList().length
                   ? TextButton(
                 onPressed: () {
@@ -443,42 +481,42 @@ class _BookingState extends State<Booking> {
           hint: 'Email Address *',
           leadingIcon: Icons.email,
           keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-        ),
-        Input(
-          controller: address_line_1,
-          // label: 'Address line 1 *',
-          hint: 'Address line 1 *',
-          leadingIcon: Icons.location_on_rounded,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
-        ),
-        Input(
-          controller: address_line_2,
-          // label: 'Address line 2',
-          hint: 'Address line 2',
-          leadingIcon: Icons.location_on_rounded,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
-        ),
-        Input(
-          controller: city,
-          // label: 'City *',
-          hint: 'City *',
-          leadingIcon: Icons.location_city,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
-        ),
-        Input(
-          controller: postcode,
-          // label: 'Postcode *',
-          hint: 'Postcode *',
-          leadingIcon: Icons.location_on_rounded,
-          keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
         ),
+        // Input(
+        //   controller: address_line_1,
+        //   // label: 'Address line 1 *',
+        //   hint: 'Address line 1 *',
+        //   leadingIcon: Icons.location_on_rounded,
+        //   keyboardType: TextInputType.text,
+        //   textInputAction: TextInputAction.next,
+        // ),
+        // Input(
+        //   controller: address_line_2,
+        //   // label: 'Address line 2',
+        //   hint: 'Address line 2',
+        //   leadingIcon: Icons.location_on_rounded,
+        //   keyboardType: TextInputType.text,
+        //   textInputAction: TextInputAction.next,
+        // ),
+        // Input(
+        //   controller: city,
+        //   // label: 'City *',
+        //   hint: 'City *',
+        //   leadingIcon: Icons.location_city,
+        //   keyboardType: TextInputType.text,
+        //   textInputAction: TextInputAction.next,
+        // ),
+        // Input(
+        //   controller: postcode,
+        //   // label: 'Postcode *',
+        //   hint: 'Postcode *',
+        //   leadingIcon: Icons.location_on_rounded,
+        //   keyboardType: TextInputType.text,
+        //   textInputAction: TextInputAction.done,
+        // ),
         SizedBox(
-          height: 30,
+          height: 10,
         ),
         // SizedBox(height: 10),
         Text(warningMessage,
@@ -636,7 +674,7 @@ class _BookingState extends State<Booking> {
           width: scrSize(context) * 15,
           height: scrSize(context) * 15,
           padding: EdgeInsets.all(5),
-          // decoration: linearGradientBackground(context),
+          decoration: linearGradientBackground(context),
           child: Container(
             child: Image.asset(
               "assets/brand/logo_transparent.png",

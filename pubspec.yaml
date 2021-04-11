@@ -3,7 +3,7 @@ description: Green Lane Masjid
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.0+3
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
@@ -19,6 +19,8 @@ dependencies:
   intl:                         ^0.17.0
   flutter_staggered_animations: "^0.1.2"
   device_info:                  ^0.4.0+4
+  flutter_inappwebview:         "^4.0.0+4" # Open webpage for live stream
+
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +33,7 @@ flutter_launcher_name:
   name: "GLM"
 
 flutter_icons:
-  image_path: 'assets/brand/logo.png'
+  image_path: 'assets/brand/logo.jpg'
   android: true
   ios: true
 
