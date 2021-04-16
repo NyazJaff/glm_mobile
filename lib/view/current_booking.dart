@@ -4,6 +4,10 @@ import '../utilities/booking_helper.dart';
 import 'package:intl/intl.dart';
 
 class CurrentBookings extends StatefulWidget {
+  Function parentCallback;
+
+  CurrentBookings({Key key, this.parentCallback}) : super(key: key);
+
   @override
   _CurrentBookingsState createState() => _CurrentBookingsState();
 }
@@ -185,13 +189,14 @@ class _CurrentBookingsState extends State<CurrentBookings> {
                     TextButton(
                       child: Text('Yes',
                           style: txtStyle(paramSize: 16)),
-                      onPressed: () {
+                      onPressed: () async {
+                        await bookingHelper
+                            .deleteUserPrayer(
+                            prayerId);
                         setState(() {
                           userBookings.removeAt(index);
-                          bookingHelper
-                              .deleteUserPrayer(
-                                  prayerId);
                         });
+                        widget.parentCallback();
                         Navigator.pop(context);
                       },
                     ),

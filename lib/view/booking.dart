@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -189,6 +190,27 @@ class _BookingState extends State<Booking> {
     });
   }
 
+  Widget devNJaff(){
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFFAFAFA).withOpacity(0.7),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: TextButton(
+            child: Text('© 2021 Green Lane Masjid proudly developed by Click & Repair',
+                textAlign: TextAlign.center,
+                style: txtStyle(paramBold: true, paramSize: 10)),
+            onPressed: () async {
+              await InAppBrowser.openWithSystemBrowser(
+                  url: "https://www.clickandrepair.co.uk/");
+            }
+
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,7 +253,7 @@ class _BookingState extends State<Booking> {
                     child: Text('My Bookings',
                         style: txtStyle(paramBold: true, paramSize: 16)),
                     onPressed: () {
-                      _showModalBottomSheet(context);
+                      _showModalMyBookings(context);
                     },
                   ),
                   TextButton(
@@ -241,8 +263,10 @@ class _BookingState extends State<Booking> {
                       await InAppBrowser.openWithSystemBrowser(
                           url: 'https://honeyforsyria.com/wp-content/uploads/2021/04/current_prayer_timetable.pdf');
                     },
-                  )
-                  // TextButton(onPressed: _showModalBottomSheet(context), child: Container())
+                  ),
+                  SizedBox(height: 20.0),
+                  devNJaff()
+                  // TextButton(onPressed: _showModalMyBookings(context), child: Container())
                 ])
               ],
             ),
@@ -262,7 +286,15 @@ class _BookingState extends State<Booking> {
     return false;
   }
 
-  _showModalBottomSheet(context){
+  refreshPrayers() async {
+    await getPrayerSlots();
+    if(bookingSlotData['gender'] != ''){
+      await createPrayerSlots(bookingSlotData['date']);
+    }
+    setState(() {});
+  }
+
+  _showModalMyBookings(context){
     showModalBottomSheet(context: context, builder: (BuildContext cotext) {
       return SingleChildScrollView(
         child: Column(children: [
@@ -278,7 +310,7 @@ class _BookingState extends State<Booking> {
           Container(
             padding: EdgeInsets.only(top:10),
             height: MediaQuery.of(context).size.height * 0.5,
-            child: CurrentBookings(),
+            child: CurrentBookings(parentCallback: refreshPrayers),
           )
         ]
         ),
